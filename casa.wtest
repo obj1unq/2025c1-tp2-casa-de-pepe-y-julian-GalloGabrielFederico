@@ -36,13 +36,13 @@ describe "casa de pepe y julian" {
     assert.equals([cama], casaDePepeYJulian.comprados(mueble))
 
     //no hay comida comprada
-    assert.throwsException({ casaDePepeYJulian.comprados(comida) })
+    assert.equals([], casaDePepeYJulian.comprados(comida))
 
     //no es mala epoca
     assert.equals(false, casaDePepeYJulian.malaEpoca())
 
     //si le preguntamos que falta comprar de una tira de asado, una plancha y un paquete de fideos debe contestar que falta la tira de asado y el paquete de fideos
-    assert.equals([tiraDeAsado, paqueteDeFideos], casaDePepeYJulian.queFaltaComprar([tiraDeAsado, plancha,paqueteDeFideos]))
+    assert.equals([tiraDeAsado, paqueteDeFideos], casaDePepeYJulian.queFaltaComprar([tiraDeAsado, plancha, paqueteDeFideos]))
 
     //falta comida
     assert.equals(true, casaDePepeYJulian.faltaComida())
@@ -108,12 +108,12 @@ describe "casa de pepe y julian" {
     casaDePepeYJulian.comprar(heladera)
 
     //si le preguntamos que falta comprar de una plancha y una cama debe contestar error, ya que no falta nada de esa lista
-    assert.throwsException({ casaDePepeYJulian.queFaltaComprar([plancha, cama]) })
+    assert.equals([], casaDePepeYJulian.queFaltaComprar([plancha, cama]))
   }
 
   test "test 4" {
     //si le pregunto las categorias compradas deberia decir error, ya que aun no se ha comprado nada
-    assert.throwsException({ casaDePepeYJulian.categoriasCompradas() })
+    assert.equals([], casaDePepeYJulian.categoriasCompradas())
   }
 }
 

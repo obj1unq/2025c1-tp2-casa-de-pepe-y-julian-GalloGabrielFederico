@@ -34,11 +34,15 @@ object casaDePepeYJulian {
     }
 
     method tieneAlgun(categoria) {
-      return cosas.any({cosa => cosa.categoria() == categoria})
+      return cosas.any({cosa => self.esMismaCategoria(cosa.categoria(), categoria)})
+    }
+
+    method esMismaCategoria(cat1, cat2) {
+      return cat1 == cat2
     }
 
     method vieneDeComprar(categoria) {
-      return cosas.last().categoria() == categoria
+      return self.esMismaCategoria(cosas.last().categoria(), categoria)
     }
 
     method esDerrochona() {
@@ -50,38 +54,39 @@ object casaDePepeYJulian {
     }
 
     method comprados(categoria) {
-      return if(cosas.filter({cosa => cosa.categoria() == categoria}) == []){
-                self.error("no se compro nada de esa categoria")
-             }
-             else {
-                cosas.filter({cosa => cosa.categoria() == categoria})
-             }
+      return cosas.filter({cosa => self.esMismaCategoria(cosa.categoria(), categoria)})
     }
 
     method malaEpoca() {
-      return cosas.all({cosa => cosa.categoria() == comida})
+      return cosas.all({cosa => cosa.categoria().esComestible()})
     }
 
     method queFaltaComprar(lista) {
-      return if(lista.filter({elemento => not cosas.contains(elemento)}) == []){
-                self.error("no falta comprar nada de la lista")
-             }
-             else {
-                (lista.filter({elemento => not cosas.contains(elemento)}))
-             }
+      return lista.filter({elemento => !self.apareceEnCosas(elemento)})
+    }
+
+    method apareceEnCosas(unaCosa) {
+      return cosas.any({cosa => self.esMismaCosa(cosa, unaCosa)})
+    }
+
+    method esMismaCosa(cosa1, cosa2) {
+      return cosa1 == cosa2
     }
 
     method faltaComida() {
-      return cosas.filter({cosa => cosa.categoria() == comida}).size() <= 2
+      return self.cantidadDeComidaComprada() < 2
+    }
+
+    method cantidadDeComidaComprada() {
+      return cosas.count({cosa => cosa.categoria().esComestible()})
     }
 
     method categoriasCompradas() {
-      return if(cosas.map({cosa => cosa.categoria()}).withoutDuplicates() == []){
-                self.error("aun no se ha comprado nada")
-             }
-             else {
-                cosas.map({cosa => cosa.categoria()}).withoutDuplicates()
-             }
+      return self.listaDeCategoriasCompradas().withoutDuplicates()
+    }
+
+    method listaDeCategoriasCompradas() {
+      return cosas.map({cosa => cosa.categoria()})
     }
 }
 
@@ -93,12 +98,15 @@ object cuentaCorriente {
   }
 
   method extraer(_saldo) {
-    if (saldo >= _saldo) {
-        saldo -= _saldo
+    if (self.validarExtraccion(_saldo)) {
+      saldo -= _saldo
     }
     else {
-        self.error("no hay saldo suficiente")
+      self.error("no hay saldo suficiente")
     }
+  }
+  method validarExtraccion(_saldo) {
+    return saldo >= _saldo
   }
   method depositar(_saldo) {
     saldo += _saldo
@@ -119,12 +127,15 @@ object cuentaConGastos {
   }
 
   method depositar(_saldo) {
-    if (_saldo > 1000) {
+    if (self.validarDeposito(_saldo)) {
         self.error("no se puede depositar mas de 1000")
     }
     else {
         saldo += _saldo - costoPorOperacion
     }
+  }
+  method validarDeposito(_saldo) {
+    return _saldo > 1000
   }
 
 }
