@@ -1,0 +1,127 @@
+import cosas.*
+import casa.*
+
+describe "casa de pepe y julian" {
+  test "test 1" {
+    //compra una heladera, una cama y una plancha
+    casaDePepeYJulian.comprar(heladera)
+    casaDePepeYJulian.comprar(cama)
+    casaDePepeYJulian.comprar(plancha)
+
+    //la cantidad de cosas compradas es 3
+    assert.equals(3, casaDePepeYJulian.cantidadDeCosasCompradas())
+
+    //tiene algun electrodomestico
+    assert.equals(true, casaDePepeYJulian.tieneAlgun(electrodomestico))
+
+    //tiene algun mueble
+    assert.equals(true, casaDePepeYJulian.tieneAlgun(mueble))
+
+    //no tiene alguna comida
+    assert.equals(false, casaDePepeYJulian.tieneAlgun(comida))
+
+    //viene de comprar un electrodomestico
+    assert.equals(true, casaDePepeYJulian.vieneDeComprar(electrodomestico))
+
+    //no viene de comprar un mueble
+    assert.equals(false, casaDePepeYJulian.vieneDeComprar(mueble))
+
+    //es derrochona
+    assert.equals(true, casaDePepeYJulian.esDerrochona())
+
+    //los electrodomesticos comprados son heladera y plancha
+    assert.equals([heladera,plancha], casaDePepeYJulian.comprados(electrodomestico))
+
+    //los muebles comprados con cama y nada mas
+    assert.equals([cama], casaDePepeYJulian.comprados(mueble))
+
+    //no hay comida comprada
+    assert.equals([], casaDePepeYJulian.comprados(comida))
+
+    //no es mala epoca
+    assert.equals(false, casaDePepeYJulian.malaEpoca())
+
+    //si le preguntamos que falta comprar de una tira de asado, una plancha y un paquete de fideos debe contestar que falta la tira de asado y el paquete de fideos
+    assert.equals([tiraDeAsado, paqueteDeFideos], casaDePepeYJulian.queFaltaComprar([tiraDeAsado, plancha, paqueteDeFideos]))
+
+    //falta comida
+    assert.equals(true, casaDePepeYJulian.faltaComida())
+
+    //las categorías compradas son electrodoméstico y mueble
+    assert.equals([electrodomestico, mueble], casaDePepeYJulian.categoriasCompradas())
+  }
+
+
+  test "cuenta corriente" {
+    //saldo inicial 20
+    cuentaCorriente.depositar(20)
+
+    //se depositan 1000
+    cuentaCorriente.depositar(1000)
+    assert.equals(1020, cuentaCorriente.saldo())
+
+    //se extraen 50
+    cuentaCorriente.extraer(50)
+    assert.equals(970, cuentaCorriente.saldo())
+
+    //se intenta extraer 2000
+    assert.throwsException({ cuentaCorriente.extraer(2000) })
+  }
+
+  test "cuenta con gastos" {
+    //saldo inicial 500 y costo por operacion 20
+    cuentaConGastos.depositar(500)
+    cuentaConGastos.costoPorOperacion(20)
+
+    //se depositan 1000
+    cuentaConGastos.depositar(1000)
+    assert.equals(1480, cuentaConGastos.saldo())
+
+    //se extraen 30
+    cuentaConGastos.extraer(30)
+    assert.equals(1450, cuentaConGastos.saldo())
+
+    //se intenta depositar 2000 pero no se puede y queda en 1450
+    assert.throwsException({ cuentaConGastos.depositar(2000) })
+    assert.equals(1450, cuentaConGastos.saldo())
+
+    //se extraen 2000 y el saldo queda en -550
+    cuentaConGastos.extraer(2000)
+    assert.equals(-550, cuentaConGastos.saldo())
+  }
+
+  test "test 2" {
+    //se asigna una cuenta corriente a la casa de pepe y julian, con saldo inicial de 1000
+    casaDePepeYJulian.cuenta(cuentaCorriente)
+    casaDePepeYJulian.depositar(1000)
+
+    //se compra una tira de asado y un paquete de fideos y el saldo queda en 600
+    casaDePepeYJulian.comprar(tiraDeAsado)
+    casaDePepeYJulian.comprar(paqueteDeFideos)
+    assert.equals(600, casaDePepeYJulian.saldo())
+  }
+
+  test "test 3" {
+    //compra una cama, una plancha y una heladera
+    casaDePepeYJulian.comprar(cama)
+    casaDePepeYJulian.comprar(plancha)
+    casaDePepeYJulian.comprar(heladera)
+
+    //si le preguntamos que falta comprar de una plancha y una cama debe contestar error, ya que no falta nada de esa lista
+    assert.equals([], casaDePepeYJulian.queFaltaComprar([plancha, cama]))
+  }
+
+  test "test 4" {
+    //si le pregunto las categorias compradas deberia decir error, ya que aun no se ha comprado nada
+    assert.equals([], casaDePepeYJulian.categoriasCompradas())
+  }
+}
+
+
+
+
+
+
+
+
+
